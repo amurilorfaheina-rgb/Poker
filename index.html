@@ -16,7 +16,7 @@ body{margin:0 auto;max-width:560px;height:calc(100dvh - env(safe-area-inset-top,
 .cd{display:inline-block;width:22px;height:31px;border-radius:3px;background:#fff;color:#111;font:700 10px/1.1 system-ui,sans-serif;margin:2px 1px 0;padding:2px;text-align:left;vertical-align:top}
 .cd.r{color:#c0182b}.cd.bk{background:repeating-linear-gradient(45deg,#7a1630,#7a1630 3px,#5c0f24 3px,#5c0f24 6px);border:1px solid #fff}
 .cd.big{width:40px;height:56px;font-size:15px;margin:0}.em{background:#0003;border:1px dashed #fff6}.fl{animation:fl .4s}
-@keyframes fl{from{transform:rotateY(90deg)}to{transform:none}}
+@keyframes fl{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}
 #bd{position:absolute;left:50%;top:49%;transform:translate(-50%,-50%);display:flex;gap:3px;z-index:2}
 #pot{position:absolute;left:50%;top:65%;transform:translate(-50%,-50%);color:#fff;text-align:center;font-size:12px;z-index:2}
 #dl{position:absolute;left:50%;top:25%;transform:translate(-50%,-50%);color:#fff;text-align:center;font-size:26px;z-index:2}#dl small{display:block;font-size:10px}
@@ -99,11 +99,11 @@ a=a||analyze();const E=Math.round(a.e*100),nm=board.length?CAT[Math.floor(ev(p.h
 const rec=a.call?(a.e>a.po+.1?['Pagar','#2e9e5b']:a.e<a.po?['Desistir','#d64545']:['Neutro','#c98a1a']):(a.e>.55?['Apostar','#2e9e5b']:['Check','#c98a1a']);
 let o='';if(a.o){const L=a.o.length,p1=L/(52-board.length-2);o=` · Outs <b>${L}</b> (${Math.round(p1*100)}%)`}
 el.innerHTML=`${vdh}<div>${posH} · <b>${p.h.map(c=>R[c%13]+S[c/13|0]).join(' ')}</b> · ${nm}</div><div class="bar"><i style="width:${E}%"></i></div><div>Equity <b>${E}%</b> vs ${a.n}${o}${a.call?` · Precisa ${Math.round(a.po*100)}% (${a.e>a.po?'+EV':'−EV'})`:''} — sugestão: <b style="color:${rec[1]}">${rec[0]}</b></div>`}
-function bot(p,i){const n=P.filter((q,j)=>!q.f&&j!=i).length,call=Math.min(maxBet-p.bet,p.s),e=eq(p.h,board,n,120),po=call/(pot+call||1),fair=1/(n+1),r=rnd(),canR=p.s>call;
+function bot(p,i){const n=P.filter((q,j)=>!q.f&&j!=i).length,call=Math.min(maxBet-p.bet,p.s),e=eq(p.h,board,n,120),po=call/(pot+call||1),fair=1/(n+1),r=rnd(),canR=p.s>call,vt=Math.min(fair*1.5,.58),rt=Math.min(board.length?fair*2+.08:fair*1.6+.04,.72);
 const sz=f=>Math.min(p.s+p.bet,Math.max(maxBet+lastRaise,Math.round((maxBet+pot*f)/5)*5));
-if(!call){if(canR&&(e>fair*1.5-p.l||r<p.b*.8)&&r<.45+p.g*.5)return{t:'r',v:sz(.5+r*.4)};return{t:'c'}}
-if(canR&&e>fair*2+.08&&r<.3+p.g*.6)return{t:'r',v:sz(.7)};
-if(canR&&r<p.b*.35&&call<=pot*.4)return{t:'r',v:sz(.8)};
+if(!call){if(canR&&(e>vt-p.l||r<p.b*1.6+(n<=2?.12:0)+(e>.25&&board.length&&board.length<5?.12:0))&&r<.5+p.g*.5)return{t:'r',v:sz(.4+rnd()*.5)};return{t:'c'}}
+if(canR&&e>rt&&r<.35+p.g*.6)return{t:'r',v:sz(.4+rnd()*.5)};
+if(canR&&r<p.b*.6&&call<=pot*.6)return{t:'r',v:sz(.4+rnd()*.5)};
 if(e+p.l>po*(board.length?.9:.55)+.03||(r<p.b*.5&&call<=pot*.4))return{t:'c'};return{t:'f'}}
 function apply(i,a){const p=P[i],call=Math.min(maxBet-p.bet,p.s);
 if(a.t=='f'){p.f=true;p.last='Fold'}
