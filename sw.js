@@ -1,4 +1,4 @@
-const C='poker-v4',F=['./','index.html','manifest.json','icon-180.png','icon-192.png','icon-512.png'];
+const C='poker-v5',F=['./','index.html','manifest.json','icon-180.png','icon-192.png','icon-512.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(F)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(n=>n!==C).map(n=>caches.delete(n)))).then(()=>self.clients.claim()))});
 // Com internet: busca a versão nova e atualiza o cache. Sem internet: usa o que está guardado.
